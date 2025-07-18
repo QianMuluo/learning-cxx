@@ -1,15 +1,21 @@
 ﻿#include "../exercise.h"
 #include <cstring>
+#include <format>
 // READ: 类模板 <https://zh.cppreference.com/w/cpp/language/class_template>
 
 template<class T>
 struct Tensor4D {
+public:
     unsigned int shape[4];
     T *data;
 
     Tensor4D(unsigned int const shape_[4], T const *data_) {
         unsigned int size = 1;
         // TODO: 填入正确的 shape 并计算 size
+        for (int i = 0;i < 4;i++) {
+            shape[i] = shape_[i];
+            size *= shape[i];
+        }
         data = new T[size];
         std::memcpy(data, data_, size * sizeof(T));
     }
@@ -28,6 +34,35 @@ struct Tensor4D {
     // 则 `this` 与 `others` 相加时，3 个形状为 `[1, 2, 1, 4]` 的子张量各自与 `others` 对应项相加。
     Tensor4D &operator+=(Tensor4D const &others) {
         // TODO: 实现单向广播的加法
+        bool broadcast[4];
+       
+        for (int i = 0;i < 4;i++) {
+            if (broadcast[i] = shape[i] != others.shape[i]) {
+                ASSERT(others.shape[i] == 1, std::format("the {length}}th dim must equal to {} or 1", i+1, shape[i]))
+            }
+        }
+        auto dst = this->data;
+        auto src = others.data;
+        T* record[4]{ src};
+        for (auto i0 = 0u;i0 < shape[0];i0++) {
+            if (broadcast[0]) src = record[0];
+            record[1] = src;
+            for (auto i1 = 0u; i1 < shape[1]; i1++) {
+                if (broadcast[1]) src = record[1];
+                record[2] = src;
+                for (auto i2 = 0u;i2 < shape[2]; i2++) {
+                    if (broadcast[2]) src = record[2];
+                    record[3] = src;
+                    for (auto i3 = 0u;i3 < shape[3];i3++) {
+                        if (broadcast[3]) src = record[3];
+                        *dst += *src;
+                        dst++;
+                        src++;
+                    }
+                }
+            }
+
+        }
         return *this;
     }
 };

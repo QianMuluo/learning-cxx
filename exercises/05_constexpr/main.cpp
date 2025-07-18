@@ -1,5 +1,19 @@
 #include "../exercise.h"
 
+template <int N>
+struct Fibonacci {
+    static constexpr unsigned long long value = Fibonacci<N - 1>::value + Fibonacci<N - 2>::value;
+};
+template <>
+struct Fibonacci<1> {
+    static constexpr long long value = 1;
+};
+
+template <>
+struct Fibonacci<0> {
+    static constexpr long long value = 0;
+};
+
 constexpr unsigned long long fibonacci(int i) {
     switch (i) {
         case 0:
@@ -11,15 +25,16 @@ constexpr unsigned long long fibonacci(int i) {
     }
 }
 
+
 int main(int argc, char **argv) {
-    constexpr auto FIB20 = fibonacci(20);
+    constexpr auto FIB20 = Fibonacci<20>::value; //fibonacci(20);
     ASSERT(FIB20 == 6765, "fibonacci(20) should be 6765");
     std::cout << "fibonacci(20) = " << FIB20 << std::endl;
 
     // TODO: 观察错误信息，修改一处，使代码编译运行
     // PS: 编译运行，但是不一定能算出结果……
     constexpr auto ANS_N = 90;
-    constexpr auto ANS = fibonacci(ANS_N);
+    auto ANS = Fibonacci<ANS_N>::value;//fibonacci(ANS_N);
     std::cout << "fibonacci(" << ANS_N << ") = " << ANS << std::endl;
 
     return 0;
