@@ -38,7 +38,7 @@ public:
        
         for (int i = 0;i < 4;i++) {
             if (broadcast[i] = shape[i] != others.shape[i]) {
-                ASSERT(others.shape[i] == 1, std::format("the {length}}th dim must equal to {} or 1", i+1, shape[i]))
+                ASSERT(others.shape[i] == 1, "should be 1")
             }
         }
         auto dst = this->data;
